@@ -43,6 +43,28 @@ const numberFormat = new Intl.NumberFormat();
 // Every chart type resolves to the same definition shape the <Chart> accepts.
 type Definition = DomChartDefinition;
 
+// The default tooltip prints channel names ("x"); ours names the dimension
+// value and lists one row per series with the measure's real label.
+function tooltipFor(single: string) {
+    return {
+        use: tooltip,
+        content: (points: readonly { datum: unknown }[]) => {
+            const rows = points.map((point) => point.datum as ChartRow);
+
+            return {
+                title: rows[0]?.x ?? '',
+                rows: rows.map((row) => ({
+                    label:
+                        rows.length > 1 || row.series !== single
+                            ? row.series
+                            : single,
+                    value: numberFormat.format(row.value),
+                })),
+            };
+        },
+    };
+}
+
 function legendFor(series: string[]) {
     return series.length > 1
         ? { legend: colorLegend({ placement: 'bottom' as const }) }
@@ -73,7 +95,7 @@ function cartesian(
                 y: { scale: () => scaleBand<string>().padding(0.2) },
             },
             color: legendFor(series),
-            tooltip,
+            tooltip: tooltipFor(yLabel),
         });
     }
 
@@ -97,7 +119,7 @@ function cartesian(
                 },
             },
             color: legendFor(series),
-            tooltip,
+            tooltip: tooltipFor(yLabel),
         });
     }
 
@@ -122,7 +144,7 @@ function cartesian(
                 },
             },
             color: legendFor(series),
-            tooltip,
+            tooltip: tooltipFor(yLabel),
         });
     }
 
@@ -138,11 +160,15 @@ function cartesian(
             },
         },
         color: legendFor(series),
-        tooltip,
+        tooltip: tooltipFor(yLabel),
     });
 }
 
-function pieChart(rows: ChartRow[], chart: ChartSpec): Definition {
+function pieChart(
+    rows: ChartRow[],
+    chart: ChartSpec,
+    yLabel: string,
+): Definition {
     // A pie has one dimension and one measure: series collapse onto x.
     const slices = pie(
         rows.map((row) => ({ label: row.x, value: Math.max(0, row.value) })),
@@ -176,7 +202,27 @@ function pieChart(rows: ChartRow[], chart: ChartSpec): Definition {
         ],
         scales: { x: null, y: null },
         color: { legend: colorLegend({ placement: 'bottom' }) },
-        tooltip,
+        tooltip: {
+            use: tooltip,
+            content: (points: readonly { datum: unknown }[]) => {
+                const slice = points[0]?.datum as
+                    | { label: string; value: number }
+                    | undefined;
+
+                return {
+                    title: slice?.label ?? '',
+                    rows:
+                        slice === undefined
+                            ? []
+                            : [
+                                  {
+                                      label: yLabel,
+                                      value: numberFormat.format(slice.value),
+                                  },
+                              ],
+                };
+            },
+        },
     });
 }
 
@@ -280,7 +326,7 @@ export function ReportChart({
         }
 
         if (chart.type === 'pie') {
-            return pieChart(shaped.rows, chart);
+            return pieChart(shaped.rows, chart, shaped.yLabel);
         }
 
         return cartesian(shaped.rows, shaped.series, chart, shaped.yLabel);
