@@ -189,7 +189,7 @@ export function ReportCard({
                             Edit
                         </Button>
                     )}
-                    {onCloned && (
+                    {onCloned && available && (
                         <Button
                             size="sm"
                             variant="outline"
