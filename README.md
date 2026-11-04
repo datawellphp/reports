@@ -5,7 +5,6 @@
 <p align="center">
     <a href="https://packagist.org/packages/datawell/reports"><img src="https://img.shields.io/packagist/v/datawell/reports.svg?style=flat-square" alt="Packagist"></a>
     <a href="https://packagist.org/packages/datawell/reports"><img src="https://img.shields.io/packagist/php-v/datawell/reports.svg?style=flat-square" alt="PHP from Packagist"></a>
-    <a href="https://github.com/datawellphp/reports/actions"><img alt="GitHub Workflow Status (main)" src="https://img.shields.io/github/actions/workflow/status/datawellphp/reports/tests.yml?branch=main&label=Tests&style=flat-square"></a>
     <a href="https://packagist.org/packages/datawell/reports"><img src="https://img.shields.io/packagist/dt/datawell/reports.svg?style=flat-square" alt="Total Downloads"></a>
 </p>
 
@@ -84,6 +83,10 @@ Chart types: `bar`, `barHorizontal`, `line`, `area`, `pie`, `number`, `table`.
 ```bash
 composer test
 ```
+
+## Contributing
+
+This repository is a read-only copy of the `reports` package, published automatically from Datawell's development repository, so changes aren't merged here directly. Issues and pull requests are still welcome: accepted changes are applied upstream and published back here. See the [contributing guide](.github/CONTRIBUTING.md).
 
 ## License
 
