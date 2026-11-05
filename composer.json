@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.3",
         "illuminate/support": "^12.0||^13.0",
-        "datawell/datawell": "@dev"
+        "datawell/datawell": "^0.1"
     },
     "require-dev": {
         "larastan/larastan": "^3.9",
@@ -99,14 +99,17 @@
             "phpstan/extension-installer": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [
         {
             "type": "path",
             "url": "../datawell",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "datawell/datawell": "dev-main"
+                }
             }
         }
     ],
